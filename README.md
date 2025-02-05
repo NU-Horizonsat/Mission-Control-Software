@@ -32,7 +32,7 @@ A containerized ground station software stack that integrates:
 
 ```bash
 git clone https://github.com/NU-Horizonsat/Mission-Control-Software.git
-cd ground-station
+cd Mission-Control-Software
 ```
 
 ### 3. Configure Satellites
