@@ -1,0 +1,12 @@
+{
+    "name": "openmct-gs",
+    "version": "1.0.0",
+    "dependencies": {
+      "express": "^4.18.2",
+      "openmct": "github:nasa/openmct"
+    },
+    "scripts": {
+      "start": "node server.js"
+    }
+  }
+  
