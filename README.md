@@ -31,7 +31,7 @@ A containerized ground station software stack that integrates:
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/YourOrg/ground-station.git
+git clone https://github.com/NU-Horizonsat/Mission-Control-Software.git
 cd ground-station
 ```
 
