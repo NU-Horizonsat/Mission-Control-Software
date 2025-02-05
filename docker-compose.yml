@@ -1,0 +1,73 @@
+---
+
+Below is a  Compose file that spins up **GreenCTLD**, **GNU Radio**, **AIT**, **OpenMCT**, **Gpredict**, and **Go-based Mission Control**. Adjust exposed ports as needed.
+
+```yaml
+version: "3.8"
+
+services:
+  go-mission-control:
+    build:
+      context: ./go-mission-control
+      dockerfile: Dockerfile
+    container_name: go-mission-control
+    ports:
+      - "8081:8081"
+    depends_on:
+      - ait
+      - greenctld
+    volumes:
+      - ./go-mission-control/config:/app/config
+
+  greenctld:
+    build:
+      context: ./greenctld
+      dockerfile: Dockerfile
+    container_name: greenctld
+    ports:
+      - "4533:4533"
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - BAUD=9600
+
+  gnuradio:
+    build:
+      context: ./gnuradio
+      dockerfile: Dockerfile
+    container_name: gnuradio
+    volumes:
+      - ./gnuradio:/gnuradio
+    # Example: no direct port mapped, unless you want to connect externally
+
+  ait:
+    build:
+      context: ./ait
+      dockerfile: Dockerfile
+    container_name: ait
+    # Expose relevant ports if needed (e.g., 3075 for AIT servers)
+    # ports:
+      - "3075:3075"
+
+  openmct:
+    build:
+      context: ./openmct
+      dockerfile: Dockerfile
+    container_name: openmct
+    ports:
+      - "8080:8080"
+    depends_on:
+      - go-mission-control
+
+  # Optional Gpredict container, e.g. with X11 or VNC
+  gpredict:
+    build:
+      context: ./gpredict
+      dockerfile: Dockerfile
+    container_name: gpredict
+    environment:
+      - DISPLAY=:1
+    # volumes, devices, etc. for X or VNC
+    # ports:
+      - "5901:5901"

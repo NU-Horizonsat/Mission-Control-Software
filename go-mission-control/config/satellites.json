@@ -1,0 +1,11 @@
+{
+    "satellites": [
+      {
+        "name": "ISS",
+        "norad_id": 25544,
+        "frequency": 145.800,
+        "commands": ["BEACON", "STATUS", "REBOOT"]
+      }
+    ]
+  }
+  
