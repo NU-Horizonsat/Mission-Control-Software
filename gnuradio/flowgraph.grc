@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flowgraph>
+  <platform>gnuradio</platform>
+  <category>QoL</category>
+  <options>
+    <option>
+      <key>title</key>
+      <value>ExampleFlowgraph</value>
+    </option>
+    <option>
+      <key>author</key>
+      <value>Your Name</value>
+    </option>
+    <option>
+      <key>description</key>
+      <value>Minimal FM receiver using an RTL-SDR source.</value>
+    </option>
+    <option>
+      <key>generate_options</key>
+      <value>qt_gui</value>
+    </option>
+    <option>
+      <key>run_options</key>
+      <value>prompt</value>
+    </option>
+    <option>
+      <key>cat</key>
+      <value></value>
+    </option>
+    <option>
+      <key>visual_debug</key>
+      <value>disable</value>
+    </option>
+    <option>
+      <key>global_namespace</key>
+      <value>disable</value>
+    </option>
+    <option>
+      <key>main_source</key>
+      <value>main</value>
+    </option>
+    <option>
+      <key>radio</key>
+      <value>qt</value>
+    </option>
+  </options>
+
+  <!-- Variables -->
+  <param>
+    <key>variable</key>
+    <name>center_freq</name>
+    <value>100e6</value>
+  </param>
+  <param>
+    <key>variable</key>
+    <name>samp_rate</name>
+    <value>2e6</value>
+  </param>
+  <param>
+    <key>variable</key>
+    <name>audio_rate</name>
+    <value>48000</value>
+  </param>
+  <param>
+    <key>variable</key>
+    <name>audio_decim</name>
+    <value>4</value>
+  </param>
+
+  <!-- Blocks -->
+  <!-- RTL-SDR Source -->
+  <block>
+    <key>rtl_sdr_source</key>
+    <id>rtl_sdr_source_0</id>
+    <param>
+      <key>freq</key>
+      <value>center_freq</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>gain_mode</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>30</value>
+    </param>
+    <param>
+      <key>frequency_correction</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>offset_tuning</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>antenna</key>
+      <value></value>
+    </param>
+    <param>
+      <key>bandwidth</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>tag_output</key>
+      <value>False</value>
+    </param>
+    <alias>RTL-SDR Source</alias>
+  </block>
+
+  <!-- WBFM Receive Block -->
+  <block>
+    <key>wfm_rcv</key>
+    <id>wbfm_receive_0</id>
+    <param>
+      <key>quad_rate</key>
+      <value>int(samp_rate/10)</value>
+    </param>
+    <param>
+      <key>audio_decim</key>
+      <value>audio_decim</value>
+    </param>
+    <alias>WBFM Receive</alias>
+  </block>
+
+  <!-- Rational Resampler (decimate from quad_rate to audio_rate) -->
+  <block>
+    <key>rational_resampler_xxx</key>
+    <id>rational_resampler_xxx_0</id>
+    <param>
+      <key>decimation</key>
+      <value>int((samp_rate/10) / audio_rate)</value>
+    </param>
+    <param>
+      <key>interpolation</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>[]</value>
+    </param>
+    <param>
+      <key>fractional_bw</key>
+      <value>0.4</value>
+    </param>
+    <alias>Resampler (Quad→Audio)</alias>
+  </block>
+
+  <!-- Audio Sink -->
+  <block>
+    <key>audio_sink</key>
+    <id>audio_sink_0</id>
+    <param>
+      <key>sample_rate</key>
+      <value>audio_rate</value>
+    </param>
+    <param>
+      <key>device_name</key>
+      <value>default</value>
+    </param>
+    <param>
+      <key>ok_to_block</key>
+      <value>True</value>
+    </param>
+    <alias>Audio Sink</alias>
+  </block>
+
+  <!-- Connections -->
+  <connection>
+    <src>rtl_sdr_source_0</src>
+    <srcout>0</srcout>
+    <dst>wbfm_receive_0</dst>
+    <dstin>0</dstin>
+  </connection>
+
+  <connection>
+    <src>wbfm_receive_0</src>
+    <srcout>0</srcout>
+    <dst>rational_resampler_xxx_0</dst>
+    <dstin>0</dstin>
+  </connection>
+
+  <connection>
+    <src>rational_resampler_xxx_0</src>
+    <srcout>0</srcout>
+    <dst>audio_sink_0</dst>
+    <dstin>0</dstin>
+  </connection>
+
+</flowgraph>

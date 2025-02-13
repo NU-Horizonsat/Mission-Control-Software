@@ -1,6 +1,6 @@
-FROM python:3.9
+FROM python:3.7
 
-RUN pip install ait-core
+RUN pip install "ait-core"
 
 WORKDIR /ait
 COPY scripts/ /ait/scripts/

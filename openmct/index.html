@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My OpenMCT Example</title>
+</head>
+<body>
+  <h1>OpenMCT Test</h1>
+  
+  <!-- 1) Load the UMD build of OpenMCT as a classic script -->
+  <!-- 
+       If your server is serving node_modules at /node_modules,
+       this script is available at http://localhost:8080/node_modules/openmct/dist/openmct.js 
+  -->
+  <script src="/node_modules/openmct/dist/openmct.js"></script>
+
+  <!-- 2) Load your custom plugin scripts 
+       These must define something like:
+         window.CommandPlugin = function CommandPlugin() { ... }
+       instead of 'export default'.
+       We'll assume they're in the same directory as index.html.
+  -->
+  <!----<script src="./commandPlugin.js"></script>
+  // <script src="./schedulerPlugin.js"></script>
+  // <script src="./trackingPlugin.js"></script>->
+
+  <!-- 3) Initialize OpenMCT and install plugins -->
+  <script>
+    // Suppose openmct.js is loaded here as a UMD
+    openmct.setAssetPath('/node_modules/openmct/dist');
+  
+    // 1) Manually define a clock named 'utc'
+    openmct.time.addClock('utc', {
+      key: 'utc',
+      name: 'UTC',
+      // Optional icon class
+      cssClass: 'icon-clock',
+      // Return the current time in ms
+      now: function () {
+        return Date.now();
+      },
+      // If you have start/stop logic, define it, otherwise no-op
+      start: function () {},
+      stop: function () {}
+    });
+  
+    // 2) Set that newly added 'utc' clock as active
+    openmct.time.setClock('utc');
+  
+    openmct.start();
+  </script>
+  
+</body>
+</html>
